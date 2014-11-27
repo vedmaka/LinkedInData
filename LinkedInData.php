@@ -37,11 +37,12 @@ $wgExtensionCredits['specialpage'][] = array(
 
 /* Resource modules */
 $wgResourceModules['ext.LinkedInData.main'] = array(
-    'localBasePath' => dirname( __FILE__ ) . '/',
-    'remoteExtPath' => 'LinkedInData/',
+    'localBasePath' => dirname( __FILE__ ) . '/assets/',
+    'remoteExtPath' => 'LinkedInData/assets/',
     'group' => 'ext.LinkedInData',
     'scripts' => '',
-    'styles' => ''
+    'styles' => 'userpage.css',
+    'position' => 'top'
 );
 
 /* Message Files */
@@ -51,6 +52,7 @@ $wgExtensionMessagesFiles['LinkedInData'] = dirname( __FILE__ ) . '/LinkedInData
 $wgAutoloadClasses['LinkedInData'] = dirname( __FILE__ ) . '/LinkedInData.class.php';
 $wgAutoloadClasses['LinkedInDataSpecial'] = dirname( __FILE__ ) . '/LinkedInDataSpecial.php';
 $wgAutoloadClasses['LinkedInEntrySpecial'] = dirname( __FILE__ ) . '/LinkedInDataEntry.php';
+$wgAutoloadClasses['LinkedInDataUserPage'] = dirname( __FILE__ ) . '/LinkedInDataUserPage.php';
 $wgAutoloadClasses['LinkedInDataHooks'] = dirname( __FILE__ ) . '/LinkedInData.hooks.php';
 $wgAutoloadClasses['Model_Linkedin_token'] = dirname( __FILE__ ) . '/models/Linkedin_token.php';
 $wgAutoloadClasses['Model_Linkedin_profile'] = dirname( __FILE__ ) . '/models/Linkedin_profile.php';
@@ -71,7 +73,10 @@ $wgAutoloadClasses['Model_Linkedin_connection'] = dirname( __FILE__ ) . '/models
 /* Special Pages */
 $wgSpecialPages['LinkedInData'] = 'LinkedInDataSpecial';
 $wgSpecialPages['LinkedInEntry'] = 'LinkedInEntrySpecial';
+$wgSpecialPages['LinkedInDataUserPage'] = 'LinkedInDataUserPage';
 
 /* Hooks */
 #$wgHooks['example_hook'][] = 'LinkedInDataHooks::onExampleHook';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'LinkedInDataHooks::getSchemaUpdates';
+$wgHooks['PageContentSaveComplete'][] = 'LinkedInDataHooks::onPageContentSaveComplete';
+$wgHooks['OutputPageBeforeHTML'][] = 'LinkedInDataHooks::onOutputPageBeforeHTML';

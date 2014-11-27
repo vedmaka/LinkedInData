@@ -8,6 +8,54 @@
 
 class LinkedInData {
 
+	public static function getUserConnections( $user ) {
+
+		$connections = Model_Linkedin_connection::find(array(
+			'user_id' => $user->getId()
+		));
+
+		if( count($connections) ) {
+			return $connections;
+		}
+
+		return array();
+
+	}
+
+	/**
+	 * Retrieves user ids which have specified user in their 1st level connections
+	 *
+	 * @param User $user
+	 * @return int[]
+	 */
+	public static function findFriends( User $user ) {
+
+		$profile = self::getUserProfile( $user );
+		if(!$profile) {
+			return array();
+		}
+
+		$result = array();
+
+		$connections = Model_Linkedin_connection::find(array(
+			'linkedin_id' => $profile->linkedin_id
+		));
+
+		if( count($connections) ) {
+			foreach($connections as $connection) {
+				if(
+					!in_array( $connection->user_id, $result ) &&
+					$connection->user_id != $user->getId()
+				) {
+					$result[] = $connection->user_id;
+				}
+			}
+		}
+
+		return $result;
+
+	}
+
 	public static function requestUserToken()
 	{
 
@@ -15,6 +63,7 @@ class LinkedInData {
 
 		//Do nothing if user already have valid token
 		if( self::haveValidToken($wgUser) ) {
+			LinkedInData::updateConnections( $wgUser );
 			return true;
 		}
 
@@ -124,6 +173,14 @@ class LinkedInData {
 		$profile->updated_at = time();
 		$profile->save();
 
+		if( !count($profiles) ) {
+
+			$friends = self::findFriends( $user );
+
+			//Looks like this is new user, notify hook
+			wfRunHooks('LinkedInData_profile_created', array( $profile, $friends ));
+		}
+
 		return true;
 
 	}
@@ -131,6 +188,7 @@ class LinkedInData {
 	public static function updateConnections( User $user ) {
 
 		if( !self::haveValidToken($user) ) {
+			//self::requestUserToken();
 			return false;
 		}
 
@@ -147,6 +205,7 @@ class LinkedInData {
 		if( array_key_exists('errorCode', $result) ) {
 			//Possibly, not enough rights to fetch connections
 			//TODO: handle this situation
+			self::requestUserToken();
 			return false;
 		}
 
@@ -204,6 +263,23 @@ class LinkedInData {
 
 	}
 
+	public static function userFromLinkedinId( $lid )
+	{
+		$profiles = Model_Linkedin_profile::find(array(
+			'linkedin_id' => $lid
+		));
+
+		if( !count($profiles) ) {
+			return false;
+		}
+
+		return $profiles[0]->user_id;
+	}
+
+	/**
+	 * @param User $user
+	 * @return Model_Linkedin_profile|bool
+	 */
 	public static function getUserProfile( User $user )
 	{
 

@@ -1,0 +1,41 @@
+.up-image {
+    width: 150px;
+    float: left;
+}
+.up-image > img {
+    width: 150px;
+}
+.up-info {
+    margin-left: 160px;
+}
+.up-info .up-info-field {
+    margin: 0 0 10px 0;
+}
+
+.up-field-title {
+    font-weight: bold;
+    width: 120px;
+    padding: 0 10px 0 0;
+    display: inline-block;
+    text-align: right;
+}
+
+.up-field-value {
+    display: inline-block;
+}
+
+.up-separator {
+    margin: 10px 0 10px 0;
+    line-height: 25px;
+    height: 25px;
+    background-color: #ededed;
+    border-radius: 5px;
+    font-size: 12px;
+    text-indent: 25px;
+    font-weight: bold;
+    color: #a9a9a9;
+}
+
+.up-field-title img {
+    max-width: 40px;
+}

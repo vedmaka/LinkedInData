@@ -5,10 +5,12 @@ $messages = array();
 
 /* English */
 $messages['en'] = array(
-    'LinkedInData-credits' => ''
+    'LinkedInData-credits' => '',
+    'linkedindatauserpage' => 'Profile page'
 );
 
 /* Russian */
 $messages['ru'] = array(
-    'LinkedInData-credits' => ''
+    'LinkedInData-credits' => '',
+    'linkedindatauserpage' => 'Profile page'
 );

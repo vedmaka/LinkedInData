@@ -47,6 +47,7 @@ class LinkedInEntrySpecial extends SpecialPage {
 				'~:(id,first-name,last-name,maiden-name,formatted-name,phonetic-first-name,phonetic-last-name,formatted-phonetic-name,headline,location,industry,distance,current-status,current-share,num-connections,num-connections-capped,summary,specialties,positions,picture-url,public-profile-url)'
 			);
 			LinkedInData::saveProfile( $this->getUser(), $profile );
+			LinkedInData::updateConnections( $this->getUser() );
 
 			$out->redirect( Title::newMainPage()->getFullUrl() );
 
