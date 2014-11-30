@@ -57,6 +57,7 @@ $wgAutoloadClasses['LinkedInDataHooks'] = dirname( __FILE__ ) . '/LinkedInData.h
 $wgAutoloadClasses['Model_Linkedin_token'] = dirname( __FILE__ ) . '/models/Linkedin_token.php';
 $wgAutoloadClasses['Model_Linkedin_profile'] = dirname( __FILE__ ) . '/models/Linkedin_profile.php';
 $wgAutoloadClasses['Model_Linkedin_connection'] = dirname( __FILE__ ) . '/models/Linkedin_connection.php';
+$wgAutoloadClasses['EchoLinkedInDataFormatter'] = dirname( __FILE__ ) . '/EchoLinkedInDataFormatter.php';
 
 /* ORM,MODELS */
 #$wgAutoloadClasses['LinkedInData_Model_'] = dirname( __FILE__ ) . '/includes/LinkedInData_Model_.php';
@@ -80,3 +81,8 @@ $wgSpecialPages['LinkedInDataUserPage'] = 'LinkedInDataUserPage';
 $wgHooks['LoadExtensionSchemaUpdates'][] = 'LinkedInDataHooks::getSchemaUpdates';
 $wgHooks['PageContentSaveComplete'][] = 'LinkedInDataHooks::onPageContentSaveComplete';
 $wgHooks['OutputPageBeforeHTML'][] = 'LinkedInDataHooks::onOutputPageBeforeHTML';
+$wgHooks['BeforeCreateEchoEvent'][] = 'LinkedInDataHooks::onBeforeCreateEchoEvent';
+$wgHooks['EchoGetDefaultNotifiedUsers'][] = 'LinkedInDataHooks::onEchoGetDefaultNotifiedUsers';
+
+$wgHooks['BeforePageDisplay'][] = 'LinkedInDataHooks::onBeforePageDisplay';
+

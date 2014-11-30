@@ -1,9 +1,23 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: vedmaka
  * Date: 21.11.2014
  * Time: 19:48
+ * @property mixed user_id
+ * @property mixed first_name
+ * @property mixed last_name
+ * @property mixed industry
+ * @property mixed formatted_name
+ * @property mixed headline
+ * @property mixed num_connections
+ * @property mixed summary
+ * @property mixed specialties
+ * @property mixed linkedin_id
+ * @property mixed picture_url
+ * @property mixed created_at
+ * @property mixed updated_at
  */
 
 class Model_Linkedin_profile extends Model {
