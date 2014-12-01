@@ -175,10 +175,24 @@ class LinkedInData {
 
 		if( !count($profiles) ) {
 
-			$friends = self::findFriends( $user );
+			$friendIds = self::findFriends( $user );
+
+            $friends=[];
+            foreach($friendIds as $friendId) {
+                $friends[]=User::newFromId($friendId);
+            }
+
+            EchoEvent::create( array(
+                'type' => 'linkedin-data-friend-joined',
+                'title' => $user->getUserPage(),
+                'agent' => $user,
+                'extra' => array(
+                    'friends' => $friends,
+                )
+            ));
 
 			//Looks like this is new user, notify hook
-			wfRunHooks('LinkedInData_profile_created', array( $profile, $friends ));
+			wfRunHooks('LinkedInData_profile_created', array( $profile, $friendIds ));
 		}
 
 		return true;

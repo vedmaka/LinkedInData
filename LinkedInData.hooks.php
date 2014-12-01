@@ -19,38 +19,6 @@ class LinkedInDataHooks {
         return true;
     }
 
-    public static function onBeforePageDisplay( OutputPage &$out, Skin &$skin ) {
-        global $wgUser,$wgTitle;
-
-        $friendIds = array (1,2,3);
-
-        $friends=[];
-        foreach($friendIds as $friendId) {
-            $friends[]=User::newFromId($friendId);
-        }
-
-        EchoEvent::create( array(
-            'type' => 'linkedin-data-friend-joined',
-            'title' => $wgTitle,
-            'agent' => $wgUser,
-            'extra' => array(
-                'friends' => $friends,
-            )
-        ));
-
-        EchoEvent::create( array(
-            'type' => 'reverted',
-            'title' => $wgTitle,
-            'extra' => array(
-                'revid' => "1",
-                'reverted-user-id' => "1",
-                'reverted-revision-id' => "12",
-                'method' => 'rollback',
-            ),
-            'agent' => $wgUser,
-        ) );
-    }
-
     /**
      * Add user to be notified on echo event
      * @param $event EchoEvent
@@ -75,18 +43,30 @@ class LinkedInDataHooks {
     }
 
 
-    public static function onPageContentSaveComplete( $article, $user, $content, $summary, $isMinor,
-        $isWatch, $section, $flags, $revision, $status, $baseRevId )
+    public static function onPageContentSaveComplete(WikiPage $article, User $user, Content $content, $summary, $isMinor,
+                                                      $isWatch, $section, $flags,Revision $revision,Status $status, $baseRevId)
     {
 
-        if( $article && $status && $status->ok && !$user->isAnon() ) {
-            $profile = LinkedInData::getUserProfile( $user );
-            if( $profile ) {
+        if ($article && $status && $status->ok && !$user->isAnon()) {
+            $profile = LinkedInData::getUserProfile($user);
+            if ($profile) {
 
-                $friends = LinkedInData::findFriends( $user );
-                if( count($friends) ) {
-                    wfRunHooks( 'LinkedInData_edit_notify', array( $article, $user->getId(), $friends ) );
+                $friendIds = LinkedInData::findFriends($user);
+                if (count($friendIds)) {
+
+                    $friends = [];
+                    foreach ($friendIds as $friendId) {
+                        $friends[] = User::newFromId($friendId);
+                    }
                 }
+                EchoEvent::create( array(
+                    'type' => 'linkedin-data-friend-edited',
+                    'title' => $article->getTitle(),
+                    'agent' => $user,
+                    'extra' => array(
+                        'friends' => $friends
+                    )
+                ));
 
             }
         }
@@ -142,8 +122,8 @@ class LinkedInDataHooks {
             'primary-link' => array( 'message' => 'notification-link-text-view-edit', 'destination' => 'diff' ),
             'category' => 'linkedin-data',
             'group' => 'positive',
-            'formatter-class' => 'EchoLinkedInDataFormatter',
-            'title-message' => 'notification-linkedin-data-user-created',
+            'formatter-class' => 'BasicFormatter',
+            'title-message' => 'notification-linkedin-data-friend-joined',
             'title-params' => array( 'agent', 'title' ),
             'flyout-message' => 'notification-linkedin-data-user-created-flyout',
             'flyout-params' => array( 'agent', 'title' ),
@@ -160,10 +140,10 @@ class LinkedInDataHooks {
             'category' => 'linkedin-data',
             'group' => 'positive',
             'formatter-class' => 'EchoLinkedInDataFormatter',
-            'title-message' => 'notification-linkedin-data-user-created',
+            'title-message' => 'notification-linkedin-data-friend-edited',
             'title-params' => array( 'agent', 'title' ),
-            'flyout-message' => 'notification-linkedin-data-user-created-flyout',
-            'flyout-params' => array( 'agent', 'title' ),
+//            'flyout-message' => 'notification-linkedin-data-friend-edited-flyout',
+//            'flyout-params' => array( 'agent', 'title' ),
             'payload' => array( 'summary' ),
             'email-subject-message' => 'notification-linkedin-data-email-subject',
             'email-subject-params' => array( 'agent' ),

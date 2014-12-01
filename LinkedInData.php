@@ -83,6 +83,3 @@ $wgHooks['PageContentSaveComplete'][] = 'LinkedInDataHooks::onPageContentSaveCom
 $wgHooks['OutputPageBeforeHTML'][] = 'LinkedInDataHooks::onOutputPageBeforeHTML';
 $wgHooks['BeforeCreateEchoEvent'][] = 'LinkedInDataHooks::onBeforeCreateEchoEvent';
 $wgHooks['EchoGetDefaultNotifiedUsers'][] = 'LinkedInDataHooks::onEchoGetDefaultNotifiedUsers';
-
-$wgHooks['BeforePageDisplay'][] = 'LinkedInDataHooks::onBeforePageDisplay';
-
