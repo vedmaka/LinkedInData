@@ -111,9 +111,8 @@ class LinkedInDataHooks {
      * @return bool
      */
     public static function onBeforeCreateEchoEvent( &$notifications, &$notificationCategories, &$icons ) {
-        $wgEchoNotificationCategories['linkedin-data'] = array(
-            'priority' => 5,
-            'no-dismiss' => 'web',
+        $notificationCategories['linkedin-data'] = array(
+            'priority' => 9,
             'tooltip' => 'echo-linkedin-data-tooltip',
 
         );
