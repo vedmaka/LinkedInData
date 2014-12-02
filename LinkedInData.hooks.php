@@ -15,6 +15,7 @@ class LinkedInDataHooks {
 
         $updater->addExtensionTable( 'linkedin_data_tokens', $dir.'/schema/linkedin_data_tokens.sql' );
         $updater->addExtensionTable( 'linkedin_data_profiles', $dir.'/schema/linkedin_data_profiles.sql' );
+        $updater->addExtensionTable( 'linkedin_data_connections', $dir.'/schema/linkedin_data_connections.sql' );
 
         return true;
     }
