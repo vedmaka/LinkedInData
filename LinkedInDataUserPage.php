@@ -20,6 +20,11 @@ class LinkedInDataUserPage extends UnlistedSpecialPage {
 
 		$this->setHeaders();
 
+		if( LinkedInData::getUserProfile($user) === false ) {
+			$this->getOutput()->addHTML('This profile was not connected to LinkedIn network.');
+			return true;
+		}
+
 		$data = array(
 			'wiki' => array(
 				'login' => $user->getName(),

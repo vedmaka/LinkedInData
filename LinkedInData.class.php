@@ -8,6 +8,11 @@
 
 class LinkedInData {
 
+	/**
+	 * @param User $user
+	 *
+	 * @return Model_Linkedin_connection[]
+	 */
 	public static function getUserConnections( $user ) {
 
 		$connections = Model_Linkedin_connection::find(array(
@@ -209,7 +214,7 @@ class LinkedInData {
 		$token = self::getAccessToken( $user );
 
 		$result = self::callApi( $token, 'people',
-			'~/connections:(id,headline,first-name,last-name)'
+			'~/connections:(id,headline,first-name,last-name,picture-url)'
 		);
 
 		if( !count($result) ) {
@@ -241,6 +246,7 @@ class LinkedInData {
 				$connection->last_name = $value['lastName'];
 				$connection->headline = $value['headline'];
 				$connection->linkedin_id = $value['id'];
+				$connection->picture_url = $value['pictureUrl'];
 				$connection->save();
 			}
 		}

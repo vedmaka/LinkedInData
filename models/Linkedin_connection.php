@@ -15,7 +15,8 @@ class Model_Linkedin_connection extends Model {
 		'first_name'  => 'string',
 		'last_name' => 'string',
 		'headline'  => 'string',
-		'linkedin_id'  => 'string'
+		'linkedin_id'  => 'string',
+		'picture_url' => 'string'
 	);
 
 }

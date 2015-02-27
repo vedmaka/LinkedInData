@@ -8,6 +8,11 @@
 
 class LinkedInDataHooks {
 
+    /**
+     * @param DatabaseUpdater $updater
+     *
+     * @return bool
+     */
     public static function getSchemaUpdates( $updater )
     {
 
@@ -16,6 +21,8 @@ class LinkedInDataHooks {
         $updater->addExtensionTable( 'linkedin_data_tokens', $dir.'/schema/linkedin_data_tokens.sql' );
         $updater->addExtensionTable( 'linkedin_data_profiles', $dir.'/schema/linkedin_data_profiles.sql' );
         $updater->addExtensionTable( 'linkedin_data_connections', $dir.'/schema/linkedin_data_connections.sql' );
+
+        $updater->addExtensionField( 'linkedin_data_connections', 'picture_url', $dir.'/schema/linkedin_data_connections_add_picture_url.sql' );
 
         return true;
     }
@@ -38,20 +45,21 @@ class LinkedInDataHooks {
                 if(!isset($extra['friends'])){
                     return true;
                 }
-                $users=$extra['friends'];
+                $users = $extra['friends'];
         }
         return true;
     }
 
 
     public static function onPageContentSaveComplete(WikiPage $article, User $user, Content $content, $summary, $isMinor,
-                                                      $isWatch, $section, $flags,Revision $revision,Status $status, $baseRevId)
+                                                      $isWatch, $section, $flags, $revision,Status $status, $baseRevId)
     {
 
         if ($article && $status && $status->ok && !$user->isAnon()) {
             $profile = LinkedInData::getUserProfile($user);
             if ($profile) {
 
+                $friends = array();
                 $friendIds = LinkedInData::findFriends($user);
                 if (count($friendIds)) {
 
@@ -78,6 +86,7 @@ class LinkedInDataHooks {
 
     public static function onOutputPageBeforeHTML( OutputPage &$out, &$text )
     {
+
         if( $out->getTitle() && $out->getTitle()->getNamespace() == NS_USER ) {
 
             $user = $out->getUser();
@@ -89,7 +98,7 @@ class LinkedInDataHooks {
                 $user = User::newFromName( $out->getTitle()->getBaseText() );
             }
 
-            if( $user->getId() == 0 ) {
+            if( !$user || $user->getId() == 0 ) {
                 return false;
             }
 
@@ -113,9 +122,9 @@ class LinkedInDataHooks {
      */
     public static function onBeforeCreateEchoEvent( &$notifications, &$notificationCategories, &$icons ) {
         $notificationCategories['linkedin-data'] = array(
-            'priority' => 9,
+            'priority' => 5,
+            'no-dismiss' => 'web',
             'tooltip' => 'echo-linkedin-data-tooltip',
-
         );
 
         $notifications['linkedin-data-friend-joined'] = array(
