@@ -104,6 +104,7 @@
 			<? foreach($connections as $connection): ?>
 			<div class="up-info-field">
 				<div class="up-field-title">
+					<img src="<?=$connection->picture_url?>" style="max-width: 80px" />
 					<?=$connection->first_name?> <?=$connection->last_name?>
 				</div>
 				<div class="up-field-value">
