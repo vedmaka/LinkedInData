@@ -224,6 +224,35 @@ class LinkedInData {
 
 	}
 
+	public static function updateProfilePicture( User $user ) {
+
+		if( !self::haveValidToken($user) ) {
+			return false;
+		}
+		$token = self::getAccessToken( $user );
+		$data = LinkedInData::callApi( $token,
+			'people',
+			'~:(id,picture-url)'
+		);
+		if( !$data || !array_key_exists('id', $data) ) {
+			return false;
+		}
+		$profiles = Model_Linkedin_profile::find(array(
+			'user_id' => $user->getId()
+		));
+		if( count($profiles) ) {
+			$profile = $profiles[0];
+		}else{
+			return false;
+		}
+		$profile->picture_url = $data['pictureUrl'];
+		$profile->updated_at = time();
+		$profile->save();
+
+		return true;
+
+	}
+
 	public static function updateConnections( User $user ) {
 
 		if( !self::haveValidToken($user) ) {
