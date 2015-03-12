@@ -204,6 +204,26 @@ class LinkedInData {
 
 	}
 
+	public static function updateProfile( User $user ) {
+
+		if( !self::haveValidToken($user) ) {
+			return false;
+		}
+
+		//update profile
+		$token = self::getAccessToken( $user );
+
+		$profile = LinkedInData::callApi( $token,
+			'people',
+			'~:(id,first-name,last-name,maiden-name,formatted-name,phonetic-first-name,phonetic-last-name,formatted-phonetic-name,headline,location,industry,distance,current-status,current-share,num-connections,num-connections-capped,summary,specialties,positions,picture-url,public-profile-url)'
+		);
+
+		LinkedInData::saveProfile( $user, $profile );
+
+		return true;
+
+	}
+
 	public static function updateConnections( User $user ) {
 
 		if( !self::haveValidToken($user) ) {
