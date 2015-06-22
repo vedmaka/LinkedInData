@@ -21,6 +21,8 @@ class LinkedInEntrySpecial extends SpecialPage {
 
 		$code = $this->getRequest()->getVal('code');
 
+		$returnto = $this->getRequest()->getVal('state');
+
 		if( !$code ) {
 			$out->addHTML('This page should not be called directly.');
 			return false;
@@ -49,8 +51,14 @@ class LinkedInEntrySpecial extends SpecialPage {
 			LinkedInData::saveProfile( $this->getUser(), $profile );
 			LinkedInData::updateConnections( $this->getUser() );
 
+			if( $returnto ) {
+				$title = Title::newFromText( $returnto );
+				if ( $title & $title->exists() ) {
+					$out->redirect( Title::newFromText( $returnto )->getFullURL() );
+					return true;
+				}
+			}
 			$out->redirect( Title::newMainPage()->getFullUrl() );
-
 		}
 
 	}

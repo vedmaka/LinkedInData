@@ -15,6 +15,9 @@ class LinkedInData {
 	 */
 	public static function getUserConnections( $user ) {
 
+		return array();
+		// Modified for removed LinkedIn API methods
+
 		$connections = Model_Linkedin_connection::find(array(
 			'user_id' => $user->getId()
 		));
@@ -61,7 +64,7 @@ class LinkedInData {
 
 	}
 
-	public static function requestUserToken()
+	public static function requestUserToken( $returnto = false )
 	{
 
 		global $wgUser, $wgOut, $wgLinkedInDataSettings;
@@ -77,8 +80,16 @@ class LinkedInData {
 			.'?response_type=code'
 			.'&client_id='.$wgLinkedInDataSettings['client_id']
 			.'&redirect_uri='.self::getRedirectUrl()
-			.'&state='.md5(microtime())
-			.'&scope=r_basicprofile,r_emailaddress,r_network';
+			.'&scope=r_basicprofile,r_emailaddress';
+
+			// Modified for removed LinkedIn API methods
+			// .'&scope=r_basicprofile,r_emailaddress,r_network';
+
+        if( $returnto ) {
+            $redirectUrl .= '&state='.urlencode($returnto);
+        }else{
+            $redirectUrl .= '&state='. md5(microtime());
+        }
 
 		$wgOut->redirect( $redirectUrl );
 
@@ -259,6 +270,9 @@ class LinkedInData {
 			//self::requestUserToken();
 			return false;
 		}
+
+		// Modified for removed LinkedIn API methods
+		return true;
 
 		$token = self::getAccessToken( $user );
 
